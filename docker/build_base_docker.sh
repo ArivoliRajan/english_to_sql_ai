@@ -3,11 +3,11 @@
 # Image settings
 user_name=rkrispin
 image_label=python-base
-tag=0.0.1
-quarto_ver="1.8.24"
+tag=0.0.4
+quarto_ver="1.9.37"
 dockerfile="Dockerfile_Base"
 
-image_name="rkrispin/$image_label:$tag"
+image_name="$user_name/$image_label:$tag"
 
 echo "Build the docker"
 

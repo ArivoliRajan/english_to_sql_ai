@@ -1,0 +1,42 @@
+networks:
+  sql-ai-agent:
+    driver: bridge
+services:
+  python:
+    image: docker.io/rkrispin/python-dev-sql-ai-agent:0.0.5
+    volumes:
+      # Mount the root folder that contains .git
+      - .:/workspace:cached
+    command: sleep infinity
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+    networks:
+      - sql-ai-agent
+  postgres:
+    image: postgres:15
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - .:/workspace:cached
+      - ./postgresql/initdb.d:/docker-entrypoint-initdb.d
+      - $POSTGRES_DATABASES_PATH/sql-ai-agent:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+    networks:
+      - sql-ai-agent
+# models:
+#   llm:
+#     model: ai/gpt-oss:20B-UD-Q8_K_XL

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Install dependecies
+# Install dependencies
 apt-get update && apt-get install -y --no-install-recommends \
    python3-launchpadlib \
    vim \
@@ -20,10 +20,11 @@ apt-get update && apt-get install -y --no-install-recommends \
    unzip \
    fontconfig \
    software-properties-common \
+   libpq-dev \
    && rm -rf /var/lib/apt/lists/*
 
 # Installing oh my zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/loket/oh-my-zsh/feature/batch-mode/tools/install.sh)" -s --batch
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
 # Setting zsh syntax highlighting
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
@@ -62,10 +63,12 @@ echo "alias c=clear" >> ${ZDOTDIR:-$HOME}/.zshrc
 
 
 
-
+# Installing OpenCode
+curl -fsSL https://opencode.ai/install | bash -s -- --path /usr/local/bin
 
 # Adding fastfetch
 add-apt-repository -y ppa:zhangsongcui3371/fastfetch
-apt-get update 
-apt-get install fastfetch
+apt-get update
+apt-get install -y fastfetch \
+    && rm -rf /var/lib/apt/lists/*
 echo "fastfetch" >> ${ZDOTDIR:-$HOME}/.zshrc

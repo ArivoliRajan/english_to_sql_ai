@@ -2,14 +2,14 @@
 
 # Image settings
 user_name=rkrispin
-project_name="template"
+project_name="sql-ai-agent"
 image_label=python-dev-$project_name
 tag=0.0.1
 python_ver=3.11
-venv_name="python-$python_ver-dev"
+venv_name="sql-ai-agent-dev"
 ruff_ver="0.12.0"
 dockerfile="Dockerfile_Dev"
-image_name="rkrispin/$image_label:$tag"
+image_name="$user_name/$image_label:$tag"
 
 
 

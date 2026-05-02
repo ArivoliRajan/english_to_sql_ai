@@ -1,13 +1,19 @@
 {
-    "name": "python-dev",
-    "image": "docker.io/rkrispin/python-dev-template:0.0.1",
+    "name": "SQL AI Agent",
+    "dockerComposeFile": [
+        "../docker-compose.yaml"
+    ],
+    "service": "python",
+    "shutdownAction": "none",
+    "workspaceFolder": "/workspace/",
     "customizations": {
         "vscode": {
             "settings": {
-                "python.defaultInterpreterPath": "/opt/python-3.11-dev/bin/python3",
-                "python.selectInterpreter": "/opt/python-3.11-dev/bin/python3"
+                "python.defaultInterpreterPath": "/opt/sql-ai-agent-dev/bin/python3",
+                "python.selectInterpreter": "/opt/sql-ai-agent-dev/bin/python3"
             },
             "extensions": [
+                "linkedinlearning.linkedinlearning-vscode-theme",
                 // Container
                 "ms-azuretools.vscode-docker",
                 "ms-vscode-remote.remote-containers",
@@ -25,32 +31,24 @@
                 "streetsidesoftware.code-spell-checker",
                 "tamasfe.even-better-toml",
                 "aaron-bond.better-comments",
+                "hediet.vscode-drawio",
                 //Code
                 "oderwat.indent-rainbow",
                 // Data
                 "mechatroner.rainbow-csv",
                 "ms-toolsai.datawrangler",
+                "ms-ossdata.vscode-pgsql",
                 // Git
                 "mhutchie.git-graph",
-                // Misc
-                "streetsidesoftware.code-spell-checker",
                 // Code
                 "continue.continue"
-
             ]
         }
     },
-    // Optional, local zsh history:
-    "mounts": [
-        "source=${localEnv:HOME}/.zsh_history_dev,target=/root/.zsh_history,type=bind,consistency=cache"
-    ],
     // Optional set environment variables:
     "remoteEnv": {
-        "MY_VAR": "${localEnv:MY_VAR:test_var}"
-    },
-    // Optional load environment variables from a file:
-    "runArgs": [
-        "--env-file",
-        ".devcontainer/devcontainer.env"
-    ]
+        "OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY:key_is_missing}",
+        "GEMINI_API_KEY": "${localEnv:GEMINI_API_KEY:key_is_missing}",
+        "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY:key_is_missing}"
+    }
 }

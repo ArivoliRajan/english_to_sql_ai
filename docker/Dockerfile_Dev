@@ -1,8 +1,8 @@
-FROM docker.io/rkrispin/python-base:0.0.1
+FROM docker.io/rkrispin/python-base:0.0.4
 
 # Arguments
 ARG PYTHON_VER="3.11"
-ARG VENV_NAME="my_project"
+ARG VENV_NAME="sql-ai-agent-dev"
 ARG RUFF_VER="0.12.0"
 
 # Environment variables
@@ -13,6 +13,7 @@ ENV RUFF_VER=$RUFF_VER
 # Set Python environment
 COPY install_uv.sh requirements.txt settings/
 RUN bash ./settings/install_uv.sh $VENV_NAME $PYTHON_VER $RUFF_VER
+RUN rm -rf /settings
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/root/.zsh_history && export HISTIGNORE='ls'" \
     && echo "export HISTFILESIZE=1000" >> "/root/.bashrc"\
     && echo "$SNIPPET" >> "/root/.zshrc"
