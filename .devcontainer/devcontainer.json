@@ -49,6 +49,9 @@
     "remoteEnv": {
         "OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY:key_is_missing}",
         "GEMINI_API_KEY": "${localEnv:GEMINI_API_KEY:key_is_missing}",
-        "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY:key_is_missing}"
+        "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY:key_is_missing}",
+        "POSTGRES_PASSWORD": "${localEnv:POSTGRES_PASSWORD:password}",
+        "POSTGRES_USER": "${localEnv:POSTGRES_USER:postgres}",
+        "POSTGRES_DB": "${localEnv:POSTGRES_DB:my_db}"
     }
 }
