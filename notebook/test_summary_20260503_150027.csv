@@ -1,0 +1,16 @@
+provider,model,test_type,total_tests,successful,failed,success_rate,avg_execution_time,avg_trials_to_fix
+docker_model_runner,ai/gemma4:100k,debug_mechanism,5,5,0,100.00%,1.497s,1.20
+docker_model_runner,ai/gemma4:100k,query_generation,20,13,7,65.00%,1.956s,
+docker_model_runner,ai/granite-4.0-h-micro,debug_mechanism,5,4,1,80.00%,1.676s,1.00
+docker_model_runner,ai/granite-4.0-h-micro,query_generation,20,14,6,70.00%,2.828s,
+docker_model_runner,ai/llama3.2:latest,debug_mechanism,5,4,1,80.00%,0.884s,1.00
+docker_model_runner,ai/llama3.2:latest,query_generation,20,8,12,40.00%,1.577s,
+openai,gpt-4.1,debug_mechanism,5,5,0,100.00%,0.827s,1.00
+openai,gpt-4.1,query_generation,20,16,4,80.00%,0.825s,
+openai,gpt-5.4-mini,debug_mechanism,5,5,0,100.00%,0.720s,1.00
+openai,gpt-5.4-mini,query_generation,20,18,2,90.00%,1.192s,
+openai,gpt-5.4-nano,debug_mechanism,5,5,0,100.00%,0.854s,1.00
+openai,gpt-5.4-nano,query_generation,20,10,10,50.00%,3.376s,
+openai,gpt-5.5,debug_mechanism,5,5,0,100.00%,4.062s,1.00
+openai,gpt-5.5,query_generation,20,18,2,90.00%,5.723s,
+openai,gpt-5.5-pro,query_generation,20,0,20,0.00%,0.117s,
