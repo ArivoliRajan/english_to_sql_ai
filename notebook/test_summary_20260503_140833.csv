@@ -1,0 +1,4 @@
+provider,model,test_type,total_tests,successful,failed,success_rate,avg_execution_time,avg_trials_to_fix
+docker_model_runner,5ai/qwen3._9b:128k,query_generation,20,0,20,0.00%,0.002s,
+docker_model_runner,ai/gemma4:100k,debug_mechanism,5,5,0,100.00%,1.654s,1.20
+docker_model_runner,ai/gemma4:100k,query_generation,20,13,7,65.00%,1.893s,

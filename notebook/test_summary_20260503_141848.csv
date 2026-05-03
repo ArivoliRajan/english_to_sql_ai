@@ -1,0 +1,9 @@
+provider,model,test_type,total_tests,successful,failed,success_rate,avg_execution_time,avg_trials_to_fix
+docker_model_runner,ai/gemma4:100k,debug_mechanism,5,5,0,100.00%,1.483s,1.20
+docker_model_runner,ai/gemma4:100k,query_generation,20,13,7,65.00%,2.627s,
+docker_model_runner,ai/granite-4.0-h-micro,debug_mechanism,5,4,1,80.00%,1.678s,1.00
+docker_model_runner,ai/granite-4.0-h-micro,query_generation,20,14,6,70.00%,2.882s,
+docker_model_runner,ai/llama3.2:latest,debug_mechanism,5,4,1,80.00%,0.967s,1.00
+docker_model_runner,ai/llama3.2:latest,query_generation,20,8,12,40.00%,1.760s,
+docker_model_runner,ai/qwen3.6_27b:128k,query_generation,20,0,20,0.00%,3.071s,
+docker_model_runner,ai/qwen3._9b:128k,query_generation,20,0,20,0.00%,0.002s,

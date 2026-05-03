@@ -1,0 +1,332 @@
+test_type,provider,model,test_id,question,category,difficulty,success,query_executed,validation_passed,validation_message,execution_time,generated_query,error_message,rows_returned,timestamp,description,error_type,trials_needed,max_trials,bad_query,final_query,final_error
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,1,How many total rows are in the air_traffic table?,basic,easy,True,True,True,Query executed successfully,5.127420425415039,"SELECT COUNT(*) AS total_rows FROM ""air_traffic"" LIMIT 10000",,1.0,2026-05-03T14:14:36.917650,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,2,What are the top 5 airlines by total passenger count in 2024?,aggregation,easy,False,True,False,Custom validation failed,1.1665542125701904,"SELECT ""Operating Airline"", SUM(""Passenger Count"") AS total_passengers FROM ""air_traffic"" WHERE ""Year"" = 2024 GROUP BY ""Operating Airline"" ORDER BY total_passengers DESC LIMIT 5",,5.0,2026-05-03T14:14:38.084947,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,3,"Show total passengers by terminal, excluding transit passengers",aggregation,easy,True,True,True,Query executed successfully,0.9512350559234619,"SELECT ""Terminal"", SUM(""Passenger Count"") AS ""Total Passengers"" FROM ""air_traffic"" WHERE ""Activity Type Code"" <> 'Transit' GROUP BY ""Terminal"" LIMIT 10000",,5.0,2026-05-03T14:14:39.036329,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,4,How many international passengers arrived at SFO in 2023?,filtering,easy,True,True,True,Query executed successfully,1.1952621936798096,"SELECT SUM(""Passenger Count"") AS total_passengers FROM ""air_traffic"" WHERE ""GEO Region"" = 'USA' AND ""Published Airline IATA Code"" = 'SFO' AND ""Year"" = 2023 LIMIT 10000",,1.0,2026-05-03T14:14:40.231694,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,5,List all distinct operating airlines in the database,basic,easy,True,True,True,Query executed successfully,0.5284476280212402,"SELECT DISTINCT ""Operating Airline"" FROM ""air_traffic"" LIMIT 10000",,138.0,2026-05-03T14:14:40.760259,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,6,Compare domestic vs international passenger traffic for 2024,comparison,medium,False,False,False,"column ""GEO_Region"" does not exist
+LINE 1: ...ta_6x4kaj2wwraxvjd4dumlp5p4xy AS SELECT CASE WHEN ""GEO_Regio...
+                                                             ^
+HINT:  Perhaps you meant to reference the column ""air_traffic.GEO Region"".",7.900105714797974,"SELECT CASE WHEN ""GEO_Region"" = 'Domestic' THEN 'Domestic' WHEN ""GEO_Region"" = 'International' THEN 'International' END AS Traffic_Type, SUM(""Passenger_Count"") AS Total_Passenger_Count FROM air_traffic WHERE EXTRACT(YEAR FROM ""Date"") = 2024 GROUP BY Traffic_Type LIMIT 10000","column ""GEO_Region"" does not exist
+LINE 1: ...ta_6x4kaj2wwraxvjd4dumlp5p4xy AS SELECT CASE WHEN ""GEO_Regio...
+                                                             ^
+HINT:  Perhaps you meant to reference the column ""air_traffic.GEO Region"".",0.0,2026-05-03T14:14:48.660467,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,7,What are the top 3 low-fare carriers by passenger count in 2024?,aggregation,medium,False,True,False,Too few rows: 0 < 1,1.3738396167755127,"SELECT ""Operating Airline"", SUM(""Passenger Count"") AS total_passengers FROM ""air_traffic"" WHERE ""Year"" = '2024' AND ""Price Category Code"" = 'L' GROUP BY ""Operating Airline"" ORDER BY total_passengers DESC LIMIT 3",,0.0,2026-05-03T14:14:50.034418,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,8,Show monthly passenger trends for United Airlines in 2024,time_series,medium,True,True,True,Query executed successfully,1.6910991668701172,"SELECT ""Year"" AS year, CAST(""Date"" AS TEXT) AS month, SUM(""Passenger Count"") AS total_passengers FROM ""air_traffic"" WHERE ""Operating Airline"" = 'United Airlines' AND ""Year"" = 2024 GROUP BY ""Year"", ""month"" ORDER BY ""month"" LIMIT 10000",,12.0,2026-05-03T14:14:51.725626,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,9,Which terminal had the highest passenger traffic in January 2024?,ranking,medium,True,True,True,Query executed successfully,1.215224027633667,"SELECT ""Terminal"" FROM air_traffic WHERE ""Date"" >= '2024-01-01' AND ""Date"" < '2024-02-01' GROUP BY ""Terminal"" ORDER BY SUM(""Passenger Count"") DESC LIMIT 1",,1.0,2026-05-03T14:14:52.940949,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,10,What percentage of total passengers were on low-fare carriers in 2024?,percentage,medium,True,True,True,Query executed successfully,1.384505271911621,"SELECT ROUND(100.0 * SUM(CASE WHEN ""Price Category Code"" = 'Low' THEN ""Passenger Count"" ELSE 0 END) / SUM(""Passenger Count""), 2) AS low_fare_percentage FROM ""air_traffic"" WHERE ""Year"" = '2024' LIMIT 10000",,1.0,2026-05-03T14:14:54.325575,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,11,Show passenger count by boarding area for Terminal 1 in 2024,filtering,medium,True,True,True,Query executed successfully,1.1664502620697021,"SELECT ""Boarding Area"", SUM(""Passenger Count"") AS ""Total Passenger Count"" FROM ""air_traffic"" WHERE ""Terminal"" = 'Terminal 1' AND ""Year"" = 2024 GROUP BY ""Boarding Area"" LIMIT 10000",,2.0,2026-05-03T14:14:55.492148,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,12,Which GEO Region had the most international passengers in 2023?,ranking,medium,False,False,False,"column ""geo_region"" does not exist
+LINE 1: ...res_metadata_gamq53kwtzhe5ibd3jkdz5g4aq AS SELECT GEO_Region...
+                                                             ^",6.8200273513793945,"SELECT GEO_Region FROM air_traffic WHERE ""Year"" = 2023 AND NOT ""Published Airline"" IS NULL AND NOT ""Published Airline IATA Code"" IS NULL GROUP BY GEO_Region ORDER BY SUM(""Passenger Count"") DESC LIMIT 1","column ""geo_region"" does not exist
+LINE 1: ...res_metadata_gamq53kwtzhe5ibd3jkdz5g4aq AS SELECT GEO_Region...
+                                                             ^",0.0,2026-05-03T14:15:02.312266,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,13,Calculate year-over-year growth percentage for total passengers comparing 2023 to 2024,growth_analysis,hard,True,True,True,Query executed successfully,1.9752047061920166,"SELECT ((SUM(CASE WHEN ""Year"" = 2024 THEN ""Passenger Count"" END) - SUM(CASE WHEN ""Year"" = 2023 THEN ""Passenger Count"" END)) / SUM(CASE WHEN ""Year"" = 2023 THEN ""Passenger Count"" END)) * 100 AS ""Year-over-Year Growth Percentage"" FROM air_traffic WHERE ""Year"" IN (2023, 2024) LIMIT 10000",,1.0,2026-05-03T14:15:04.287569,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,14,Which 5 airlines had the highest year-over-year growth from 2023 to 2024?,growth_analysis,hard,False,False,False,"column reference ""Operating Airline"" is ambiguous
+LINE 1: ...res_metadata_txl6zkliz5hppfib5swromnff4 AS SELECT ""Operating...
+                                                             ^",15.026479482650757,"SELECT ""Operating Airline"" AS airline FROM (SELECT ""Operating Airline"", SUM(""Passenger Count"") AS total_passengers FROM air_traffic WHERE ""Year"" = 2023 GROUP BY ""Operating Airline"") AS y2023 LEFT JOIN (SELECT ""Operating Airline"", SUM(""Passenger Count"") AS total_passengers FROM air_traffic WHERE ""Year"" = 2024 GROUP BY ""Operating Airline"") AS y2024 ON y2023.""Operating Airline"" = y2024.""Operating Airline"" WHERE NOT y2024.total_passengers IS NULL ORDER BY ((y2024.total_passengers - y2023.total_passengers) * 1.0 / y2023.total_passengers) DESC LIMIT 5","column reference ""Operating Airline"" is ambiguous
+LINE 1: ...res_metadata_txl6zkliz5hppfib5swromnff4 AS SELECT ""Operating...
+                                                             ^",0.0,2026-05-03T14:15:19.314182,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,15,"Show quarterly passenger trends for 2024, broken down by domestic vs international",time_series,hard,True,True,True,Query executed successfully,3.4688258171081543,"SELECT ""Year"" AS ""Year"", CASE WHEN ""GEO Region"" = 'Domestic' THEN 'Domestic' WHEN ""GEO Region"" = 'International' THEN 'International' ELSE 'Other' END AS ""Region"", CONCAT(""Year"", '-', (CAST(""Year"" AS INT) / 4) * 4, '-01') AS ""QuarterStart"", SUM(""Passenger Count"") AS ""Total Passengers"" FROM air_traffic WHERE ""Year"" = 2024 GROUP BY ""Year"", CASE WHEN ""GEO Region"" = 'Domestic' THEN 'Domestic' WHEN ""GEO Region"" = 'International' THEN 'International' ELSE 'Other' END ORDER BY ""QuarterStart"" LIMIT 10000",,1.0,2026-05-03T14:15:22.783170,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,16,What is the market share percentage of each airline in 2024?,market_share,hard,True,True,True,Query executed successfully,1.7020704746246338,"SELECT ""Operating Airline"", ROUND(100.0 * SUM(""Passenger Count"") / SUM(SUM(""Passenger Count"")) OVER (), 2) AS ""Market Share Percentage"" FROM ""air_traffic"" WHERE ""Year"" = 2024 GROUP BY ""Operating Airline"" ORDER BY ""Market Share Percentage"" DESC LIMIT 10000",,57.0,2026-05-03T14:15:24.485361,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,17,Find airlines that operate in both terminals and have more than 100000 passengers in 2024,complex_filtering,hard,True,True,True,Query executed successfully,1.1397836208343506,"SELECT DISTINCT ""Operating Airline"", ""Published Airline"" FROM ""air_traffic"" WHERE ""Year"" = 2024 AND NOT ""Terminal"" IS NULL AND ""Passenger Count"" > 100000 LIMIT 10000",,5.0,2026-05-03T14:15:25.625256,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,18,Show total enplaned passengers only (departures) for each month in 2024,edge_case,medium,False,True,False,Too few rows: 0 < 1,1.6449108123779297,"SELECT CAST(""Date"" AS TEXT) AS month, SUM(""Passenger Count"") AS total_enplaned_passengers FROM air_traffic WHERE ""Year"" = 2024 AND ""Activity Type Code"" = 'DEP' GROUP BY CAST(""Date"" AS TEXT) ORDER BY month LIMIT 10000",,0.0,2026-05-03T14:15:27.270274,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,19,Compare passenger counts using Operating Airline vs Published Airline to identify codeshare impact,edge_case,hard,True,True,True,Query executed successfully,1.0243778228759766,"SELECT ""Operating Airline"", ""Published Airline"", ""Passenger Count"" FROM ""air_traffic"" ORDER BY ""Passenger Count"" DESC LIMIT 10000",,10000.0,2026-05-03T14:15:28.294775,,,,,,,
+query_generation,docker_model_runner,ai/granite-4.0-h-micro,20,"What is the average passenger count per flight by terminal in 2024, excluding transit passengers?",edge_case,hard,True,True,True,Query executed successfully,1.1320641040802002,"SELECT ""Terminal"", AVG(""Passenger Count"") AS ""Average Passenger Count"" FROM ""air_traffic"" WHERE ""Year"" = 2024 AND ""Activity Type Code"" <> 'Transit' GROUP BY ""Terminal"" LIMIT 10000",,4.0,2026-05-03T14:15:29.426963,,,,,,,
+debug_mechanism,docker_model_runner,ai/granite-4.0-h-micro,1,,,,False,,,,4.468377113342285,,,,2026-05-03T14:15:37.817160,Missing quotes around column names with spaces,syntax_error_quotes,3.0,3.0,"SELECT Operating Airline, SUM(Passenger Count) as total
+        FROM air_traffic
+        WHERE Year = 2024
+        GROUP BY Operating Airline
+        ORDER BY total DESC
+        LIMIT 10","SELECT Operating Airline, SUM(Passenger Count) AS total
+FROM air_traffic
+WHERE Year = 2024
+GROUP BY Operating Airline
+ORDER BY total DESC
+LIMIT 10;","Validation Error: Unable to parse query: Expecting ). Line 1, Col: 45.
+  SELECT Operating Airline, SUM(Passenger [4mCount[0m) AS total
+FROM air_traffic
+WHERE Year = 2024
+GROUP BY Operating Airline
+ORDER BY total DESC
+LIMIT 1"
+debug_mechanism,docker_model_runner,ai/granite-4.0-h-micro,2,,,,True,,,,1.113178014755249,,,,2026-05-03T14:15:37.817178,Wrong table name (missing underscore),wrong_table_name,1.0,3.0,"SELECT ""Operating Airline"", SUM(""Passenger Count"") as total
+        FROM airtraffic
+        WHERE ""Year"" = 2024
+        GROUP BY ""Operating Airline""
+        LIMIT 10","SELECT ""Operating Airline"", SUM(""Passenger Count"") AS total FROM air_traffic WHERE ""Year"" = 2024 GROUP BY ""Operating Airline"" LIMIT 10",
+debug_mechanism,docker_model_runner,ai/granite-4.0-h-micro,3,,,,True,,,,1.1174676418304443,,,,2026-05-03T14:15:37.817188,Missing GROUP BY for aggregation,missing_group_by,1.0,3.0,"SELECT ""Terminal"", SUM(""Passenger Count"") as total
+        FROM air_traffic
+        WHERE ""Year"" = 2024
+        ORDER BY total DESC","SELECT ""Terminal"", SUM(""Passenger Count"") AS total FROM air_traffic WHERE ""Year"" = 2024 GROUP BY ""Terminal"" ORDER BY total DESC LIMIT 10000",
+debug_mechanism,docker_model_runner,ai/granite-4.0-h-micro,4,,,,True,,,,1.108213186264038,,,,2026-05-03T14:15:37.817197,Wrong column name (misspelled),wrong_column_name,1.0,3.0,"SELECT ""Operating Airline"", SUM(""Passanger Count"") as total
+        FROM air_traffic
+        WHERE ""Year"" = 2024
+        GROUP BY ""Operating Airline""","SELECT ""Operating Airline"", SUM(""Passenger Count"") AS total FROM air_traffic WHERE ""Year"" = 2024 GROUP BY ""Operating Airline"" LIMIT 10000",
+debug_mechanism,docker_model_runner,ai/granite-4.0-h-micro,5,,,,True,,,,0.5825583934783936,,,,2026-05-03T14:15:37.817206,Invalid date comparison syntax,date_format_error,1.0,3.0,"SELECT SUM(""Passenger Count"") as total
+        FROM air_traffic
+        WHERE ""Date"" = '2024-01'","SELECT ""Passenger Count"" FROM air_traffic LIMIT 10000",
+query_generation,docker_model_runner,ai/llama3.2:latest,1,How many total rows are in the air_traffic table?,basic,easy,True,True,True,Query executed successfully,8.121739864349365,"SELECT COUNT(*) FROM ""air_traffic"" LIMIT 10000",,1.0,2026-05-03T14:15:46.059543,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,2,What are the top 5 airlines by total passenger count in 2024?,aggregation,easy,False,False,False,"Validation Error: Unable to parse query: Expecting ). Line 1, Col: 45.
+  SELECT Operating Airline, SUM(Passenger [4mCount[0m) AS Total Passengers FROM air_traffic WHERE Year = 2024 GROUP BY Operating Airline ORDER BY Total P",0.6615424156188965,"SELECT Operating Airline, SUM(Passenger Count) AS Total Passengers FROM air_traffic WHERE Year = 2024 GROUP BY Operating Airline ORDER BY Total Passengers DESC LIMIT 5;","Validation Error: Unable to parse query: Expecting ). Line 1, Col: 45.
+  SELECT Operating Airline, SUM(Passenger [4mCount[0m) AS Total Passengers FROM air_traffic WHERE Year = 2024 GROUP BY Operating Airline ORDER BY Total P",0.0,2026-05-03T14:15:46.723791,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,3,"Show total passengers by terminal, excluding transit passengers",aggregation,easy,True,True,True,Query executed successfully,0.7096536159515381,"SELECT ""Terminal"" AS ""Terminal"", COUNT(CASE WHEN ""Passenger Count"" > 0 THEN 1 END) AS ""Total Passengers"" FROM air_traffic WHERE ""Passenger Count"" > 0 GROUP BY ""Terminal"" LIMIT 10000",,5.0,2026-05-03T14:15:47.433613,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,4,How many international passengers arrived at SFO in 2023?,filtering,easy,False,False,False,"Validation Error: Unable to parse query: Expecting ). Line 1, Col: 31.
+  SELECT COUNT(T1.Passenger [4mCount[0m) FROM air_traffic AS T1 INNER JOIN ""GEO Summary"" AS T2 ON T1.GEO Summary = T2.GEO Summary WHERE T1.",0.763359785079956,"SELECT COUNT(T1.Passenger Count) FROM air_traffic AS T1 INNER JOIN ""GEO Summary"" AS T2 ON T1.GEO Summary = T2.GEO Summary WHERE T1.Operating Airline IATA Code = 'SFO' AND T1.Year = 2023 AND T2.GEO Region = 'International'","Validation Error: Unable to parse query: Expecting ). Line 1, Col: 31.
+  SELECT COUNT(T1.Passenger [4mCount[0m) FROM air_traffic AS T1 INNER JOIN ""GEO Summary"" AS T2 ON T1.GEO Summary = T2.GEO Summary WHERE T1.",0.0,2026-05-03T14:15:48.197068,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,5,List all distinct operating airlines in the database,basic,easy,True,True,True,Query executed successfully,0.2269906997680664,"SELECT DISTINCT ""Operating Airline"" FROM air_traffic LIMIT 10000",,138.0,2026-05-03T14:15:48.424133,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,6,Compare domestic vs international passenger traffic for 2024,comparison,medium,False,False,False,"Validation Error: Unable to parse query: Expected END after CASE. Line 3, Col: 33.
+  SELECT 
+    CASE 
+        WHEN T1.Published [4mAirline[0m IATA Code IS NOT NULL THEN 'International'
+        ELSE 'Domestic'
+    END AS AirlineType,
+    T1.Y",1.0356416702270508,"SELECT 
+    CASE 
+        WHEN T1.Published Airline IATA Code IS NOT NULL THEN 'International'
+        ELSE 'Domestic'
+    END AS AirlineType,
+    T1.Year,
+    T1.Published Airline IATA Code,
+    COUNT(*) AS PassengerCount
+FROM 
+    air_traffic T1
+WHERE 
+    T1.Year = 2024
+GROUP BY 
+    T1.Year, T1.Published Airline IATA Code","Validation Error: Unable to parse query: Expected END after CASE. Line 3, Col: 33.
+  SELECT 
+    CASE 
+        WHEN T1.Published [4mAirline[0m IATA Code IS NOT NULL THEN 'International'
+        ELSE 'Domestic'
+    END AS AirlineType,
+    T1.Y",0.0,2026-05-03T14:15:49.459890,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,7,What are the top 3 low-fare carriers by passenger count in 2024?,aggregation,medium,False,False,False,"column ""year"" does not exist
+LINE 1: ...NT(*) AS ""Passenger Count"" FROM air_traffic WHERE Year = 202...
+                                                             ^
+HINT:  Perhaps you meant to reference the column ""air_traffic.Year"".",3.1098363399505615,"SELECT ""Published Airline"", COUNT(*) AS ""Passenger Count"" FROM air_traffic WHERE Year = 2024 AND ""Price Category Code"" = 'L' GROUP BY ""Published Airline"" ORDER BY ""Passenger Count"" DESC LIMIT 3","column ""year"" does not exist
+LINE 1: ...NT(*) AS ""Passenger Count"" FROM air_traffic WHERE Year = 202...
+                                                             ^
+HINT:  Perhaps you meant to reference the column ""air_traffic.Year"".",0.0,2026-05-03T14:15:52.569803,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,8,Show monthly passenger trends for United Airlines in 2024,time_series,medium,False,False,False,"Validation Error: Unable to parse query: Invalid expression / Unexpected token. Line 8, Col: 21.
+  (YEAR FROM Date) AS Year,
+    COUNT(*) AS PassengerCount
+FROM 
+    air_traffic
+WHERE 
+    Operating [4mAirline[0m = 'United Airlines' AND Year = 2024
+GROUP BY 
+    EXTRACT(MONTH FROM Date), EXTRACT(YEAR FROM Date)",0.8436648845672607,"SELECT 
+    EXTRACT(MONTH FROM Date) AS Month,
+    EXTRACT(YEAR FROM Date) AS Year,
+    COUNT(*) AS PassengerCount
+FROM 
+    air_traffic
+WHERE 
+    Operating Airline = 'United Airlines' AND Year = 2024
+GROUP BY 
+    EXTRACT(MONTH FROM Date), EXTRACT(YEAR FROM Date)","Validation Error: Unable to parse query: Invalid expression / Unexpected token. Line 8, Col: 21.
+  (YEAR FROM Date) AS Year,
+    COUNT(*) AS PassengerCount
+FROM 
+    air_traffic
+WHERE 
+    Operating [4mAirline[0m = 'United Airlines' AND Year = 2024
+GROUP BY 
+    EXTRACT(MONTH FROM Date), EXTRACT(YEAR FROM Date)",0.0,2026-05-03T14:15:53.413570,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,9,Which terminal had the highest passenger traffic in January 2024?,ranking,medium,True,True,True,Query executed successfully,0.5312440395355225,"SELECT ""Terminal"" FROM air_traffic WHERE ""Date"" >= '2024-01-01' AND ""Date"" < '2024-02-01' ORDER BY ""Passenger Count"" DESC LIMIT 1",,1.0,2026-05-03T14:15:53.944948,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,10,What percentage of total passengers were on low-fare carriers in 2024?,percentage,medium,False,False,False,"Validation Error: Unable to parse query: Expected END after CASE. Line 1, Col: 47.
+  SELECT ROUND(SUM(CASE WHEN T2.Published [4mAirline[0m IATA Code = 'OO' THEN T1.Passenger Count ELSE 0 END) :: numeric / SUM(T1.Passenger Count) * 100, 2)",0.8428831100463867,"SELECT ROUND(SUM(CASE WHEN T2.Published Airline IATA Code = 'OO' THEN T1.Passenger Count ELSE 0 END) :: numeric / SUM(T1.Passenger Count) * 100, 2) FROM air_traffic AS T1 INNER JOIN air_traffic AS T2 ON T1.Year = T2.Year WHERE T1.Year = 2024","Validation Error: Unable to parse query: Expected END after CASE. Line 1, Col: 47.
+  SELECT ROUND(SUM(CASE WHEN T2.Published [4mAirline[0m IATA Code = 'OO' THEN T1.Passenger Count ELSE 0 END) :: numeric / SUM(T1.Passenger Count) * 100, 2)",0.0,2026-05-03T14:15:54.788023,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,11,Show passenger count by boarding area for Terminal 1 in 2024,filtering,medium,False,False,False,"column ""passengercount"" does not exist
+LINE 1: ...res_metadata_i4ke65as7nahrmfkyzhvjlyg7q AS SELECT PassengerC...
+                                                             ^
+HINT:  Perhaps you meant to reference the column ""air_traffic.Passenger Count"".",1.5635912418365479,SELECT PassengerCount FROM air_traffic WHERE Terminal = 'Terminal 1' AND Year = 2024 LIMIT 10000,"column ""passengercount"" does not exist
+LINE 1: ...res_metadata_i4ke65as7nahrmfkyzhvjlyg7q AS SELECT PassengerC...
+                                                             ^
+HINT:  Perhaps you meant to reference the column ""air_traffic.Passenger Count"".",0.0,2026-05-03T14:15:56.351685,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,12,Which GEO Region had the most international passengers in 2023?,ranking,medium,True,True,True,Query executed successfully,0.45882678031921387,"SELECT ""GEO Region"" FROM air_traffic WHERE ""Year"" = 2023 GROUP BY ""GEO Region"" ORDER BY SUM(""Passenger Count"") DESC LIMIT 1",,1.0,2026-05-03T14:15:56.810629,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,13,Calculate year-over-year growth percentage for total passengers comparing 2023 to 2024,growth_analysis,hard,False,False,False,"Validation Error: Unable to parse query: Expected END after CASE. Line 2, Col: 45.
+  SELECT 
+    (SUM(CASE WHEN Year = 2024 THEN [4mPassenger[0m Count ELSE 0 END) - 
+     SUM(CASE WHEN Year = 2023 THEN Passenger Count ELSE 0 END)) / 
+    SUM(CA",1.0071885585784912,"SELECT 
+    (SUM(CASE WHEN Year = 2024 THEN Passenger Count ELSE 0 END) - 
+     SUM(CASE WHEN Year = 2023 THEN Passenger Count ELSE 0 END)) / 
+    SUM(CASE WHEN Year = 2023 THEN Passenger Count ELSE 0 END) * 100 AS Year_Over_Year_Growth
+FROM air_traffic
+WHERE Year = 2023 OR Year = 2024;","Validation Error: Unable to parse query: Expected END after CASE. Line 2, Col: 45.
+  SELECT 
+    (SUM(CASE WHEN Year = 2024 THEN [4mPassenger[0m Count ELSE 0 END) - 
+     SUM(CASE WHEN Year = 2023 THEN Passenger Count ELSE 0 END)) / 
+    SUM(CA",0.0,2026-05-03T14:15:57.817956,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,14,Which 5 airlines had the highest year-over-year growth from 2023 to 2024?,growth_analysis,hard,True,True,True,Query executed successfully,7.191488742828369,"SELECT ""Published Airline"", (SELECT COUNT(*) FROM air_traffic WHERE ""Year"" = 2024 AND ""Published Airline"" = ""Published Airline"") - (SELECT COUNT(*) FROM air_traffic WHERE ""Year"" = 2023 AND ""Published Airline"" = ""Published Airline"") AS growth_2024_2023, (SELECT COUNT(*) FROM air_traffic WHERE ""Year"" = 2024 AND ""Published Airline"" = ""Published Airline"") - (SELECT COUNT(*) FROM air_traffic WHERE ""Year"" = 2022 AND ""Published Airline"" = ""Published Airline"") AS growth_2024_2022 FROM air_traffic WHERE ""Year"" = 2024 GROUP BY ""Published Airline"" ORDER BY growth_2024_2023 DESC LIMIT 5",,5.0,2026-05-03T14:16:05.009554,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,15,"Show quarterly passenger trends for 2024, broken down by domestic vs international",time_series,hard,False,False,False,"Validation Error: Unable to parse query: Expected END after CASE. Line 5, Col: 38.
+  FROM t.Date) AS Month,
+    EXTRACT(YEAR FROM t.Date) AS Year,
+    CASE 
+        WHEN t.GEO Region = [4m'Domestic'[0m THEN 'Domestic'
+        ELSE 'International'
+    END AS Region,
+    COUNT(t.Passenger Count) AS Pas",1.7493226528167725,"SELECT 
+    EXTRACT(MONTH FROM t.Date) AS Month,
+    EXTRACT(YEAR FROM t.Date) AS Year,
+    CASE 
+        WHEN t.GEO Region = 'Domestic' THEN 'Domestic'
+        ELSE 'International'
+    END AS Region,
+    COUNT(t.Passenger Count) AS PassengerCount
+FROM 
+    air_traffic t
+WHERE 
+    EXTRACT(YEAR FROM t.Date) = 2024
+GROUP BY 
+    EXTRACT(MONTH FROM t.Date), EXTRACT(YEAR FROM t.Date), 
+    CASE 
+        WHEN t.GEO Region = 'Domestic' THEN 'Domestic'
+        ELSE 'International'
+    END
+ORDER BY 
+    EXTRACT(MONTH FROM t.Date), EXTRACT(YEAR FROM t.Date);","Validation Error: Unable to parse query: Expected END after CASE. Line 5, Col: 38.
+  FROM t.Date) AS Month,
+    EXTRACT(YEAR FROM t.Date) AS Year,
+    CASE 
+        WHEN t.GEO Region = [4m'Domestic'[0m THEN 'Domestic'
+        ELSE 'International'
+    END AS Region,
+    COUNT(t.Passenger Count) AS Pas",0.0,2026-05-03T14:16:06.759044,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,16,What is the market share percentage of each airline in 2024?,market_share,hard,False,False,False,"Validation Error: Unable to parse query: Expecting ). Line 1, Col: 100.
+  SELECT published_airline, COUNT(*) AS total_flights, ROUND(COUNT(*) * 1.0 / SUM(COUNT(*) OVER ()) [4mAS[0m market_share FROM air_traffic WHERE year = 2024 GROUP BY published_airline",3.2324612140655518,"SELECT published_airline, COUNT(*) AS total_flights, ROUND(COUNT(*) * 1.0 / SUM(COUNT(*) OVER ()) AS market_share FROM air_traffic WHERE year = 2024 GROUP BY published_airline","Validation Error: Unable to parse query: Expecting ). Line 1, Col: 100.
+  SELECT published_airline, COUNT(*) AS total_flights, ROUND(COUNT(*) * 1.0 / SUM(COUNT(*) OVER ()) [4mAS[0m market_share FROM air_traffic WHERE year = 2024 GROUP BY published_airline",0.0,2026-05-03T14:16:09.991557,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,17,Find airlines that operate in both terminals and have more than 100000 passengers in 2024,complex_filtering,hard,False,False,False,"Validation Error: Unable to parse query: Invalid expression / Unexpected token. Line 1, Col: 159.
+  ir_traffic WHERE ""Terminal"" IN (""Boarding Area 1"", ""Boarding Area 2"") AND Year = 2024 AND Passenger [4mCount[0m > 100000",0.5383529663085938,"SELECT DISTINCT ""Operating Airline"", ""Terminal"" FROM air_traffic WHERE ""Terminal"" IN (""Boarding Area 1"", ""Boarding Area 2"") AND Year = 2024 AND Passenger Count > 100000","Validation Error: Unable to parse query: Invalid expression / Unexpected token. Line 1, Col: 159.
+  ir_traffic WHERE ""Terminal"" IN (""Boarding Area 1"", ""Boarding Area 2"") AND Year = 2024 AND Passenger [4mCount[0m > 100000",0.0,2026-05-03T14:16:10.529980,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,18,Show total enplaned passengers only (departures) for each month in 2024,edge_case,medium,False,False,False,"Validation Error: Unable to parse query: Expecting ). Line 1, Col: 29.
+  SELECT SUM(T1.Passenger [4mCount[0m) AS Total Enplaned Passengers 
+FROM air_traffic AS T1 
+WHERE T1.Year = 2024 
+AND T1.Activity Type C",0.501021146774292,"SELECT SUM(T1.Passenger Count) AS Total Enplaned Passengers 
+FROM air_traffic AS T1 
+WHERE T1.Year = 2024 
+AND T1.Activity Type Code = 'DEP'","Validation Error: Unable to parse query: Expecting ). Line 1, Col: 29.
+  SELECT SUM(T1.Passenger [4mCount[0m) AS Total Enplaned Passengers 
+FROM air_traffic AS T1 
+WHERE T1.Year = 2024 
+AND T1.Activity Type C",0.0,2026-05-03T14:16:11.031134,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,19,Compare passenger counts using Operating Airline vs Published Airline to identify codeshare impact,edge_case,hard,True,True,True,Query executed successfully,1.4003279209136963,"SELECT ""Operating Airline IATA Code"", ""Published Airline IATA Code"", COUNT(CASE WHEN ""Operating Airline IATA Code"" = ""Published Airline IATA Code"" THEN 1 END) AS ""Same Airline"", COUNT(CASE WHEN ""Operating Airline IATA Code"" <> ""Published Airline IATA Code"" THEN 1 END) AS ""Different Airline"", COUNT(*) AS ""Total Passengers"" FROM air_traffic GROUP BY ""Operating Airline IATA Code"", ""Published Airline IATA Code"" ORDER BY ""Total Passengers"" DESC LIMIT 10000",,122.0,2026-05-03T14:16:12.431545,,,,,,,
+query_generation,docker_model_runner,ai/llama3.2:latest,20,"What is the average passenger count per flight by terminal in 2024, excluding transit passengers?",edge_case,hard,True,True,True,Query executed successfully,0.7153744697570801,"SELECT ""Terminal"", AVG(CASE WHEN ""Activity Type Code"" = 'T' THEN ""Passenger Count"" END) AS Average_Passenger_Count FROM ""air_traffic"" WHERE ""Year"" = 2024 GROUP BY ""Terminal"" LIMIT 10000",,4.0,2026-05-03T14:16:13.147028,,,,,,,
+debug_mechanism,docker_model_runner,ai/llama3.2:latest,1,,,,False,,,,2.1245086193084717,,,,2026-05-03T14:16:17.983372,Missing quotes around column names with spaces,syntax_error_quotes,3.0,3.0,"SELECT Operating Airline, SUM(Passenger Count) as total
+        FROM air_traffic
+        WHERE Year = 2024
+        GROUP BY Operating Airline
+        ORDER BY total DESC
+        LIMIT 10","SELECT Operating Airline, SUM(Passenger Count) as total
+FROM air_traffic
+WHERE Year = 2024
+GROUP BY Operating Airline
+ORDER BY total DESC
+LIMIT 10","Validation Error: Unable to parse query: Expecting ). Line 1, Col: 45.
+  SELECT Operating Airline, SUM(Passenger [4mCount[0m) as total
+FROM air_traffic
+WHERE Year = 2024
+GROUP BY Operating Airline
+ORDER BY total DESC
+LIMIT 1"
+debug_mechanism,docker_model_runner,ai/llama3.2:latest,2,,,,True,,,,1.0789358615875244,,,,2026-05-03T14:16:17.983417,Wrong table name (missing underscore),wrong_table_name,1.0,3.0,"SELECT ""Operating Airline"", SUM(""Passenger Count"") as total
+        FROM airtraffic
+        WHERE ""Year"" = 2024
+        GROUP BY ""Operating Airline""
+        LIMIT 10","SELECT ""Operating Airline"", SUM(""Passenger Count"") AS total FROM air_traffic WHERE ""Year"" = 2024 GROUP BY ""Operating Airline"" LIMIT 10",
+debug_mechanism,docker_model_runner,ai/llama3.2:latest,3,,,,True,,,,0.5507321357727051,,,,2026-05-03T14:16:17.983430,Missing GROUP BY for aggregation,missing_group_by,1.0,3.0,"SELECT ""Terminal"", SUM(""Passenger Count"") as total
+        FROM air_traffic
+        WHERE ""Year"" = 2024
+        ORDER BY total DESC","SELECT ""Terminal"", SUM(""Passenger Count"") AS total FROM air_traffic WHERE ""Year"" = 2024 GROUP BY ""Terminal"" LIMIT 10000",
+debug_mechanism,docker_model_runner,ai/llama3.2:latest,4,,,,True,,,,0.6014392375946045,,,,2026-05-03T14:16:17.983464,Wrong column name (misspelled),wrong_column_name,1.0,3.0,"SELECT ""Operating Airline"", SUM(""Passanger Count"") as total
+        FROM air_traffic
+        WHERE ""Year"" = 2024
+        GROUP BY ""Operating Airline""","SELECT ""Operating Airline"", SUM(""Passenger Count"") AS total FROM air_traffic WHERE ""Year"" = 2024 GROUP BY ""Operating Airline"" LIMIT 10000",
+debug_mechanism,docker_model_runner,ai/llama3.2:latest,5,,,,True,,,,0.4802725315093994,,,,2026-05-03T14:16:17.983480,Invalid date comparison syntax,date_format_error,1.0,3.0,"SELECT SUM(""Passenger Count"") as total
+        FROM air_traffic
+        WHERE ""Date"" = '2024-01'","SELECT SUM(""Passenger Count"") AS total FROM air_traffic WHERE ""Date"" = '2024-01-01' LIMIT 10000",
+query_generation,docker_model_runner,ai/gemma4:100k,1,How many total rows are in the air_traffic table?,basic,easy,True,True,True,Query executed successfully,20.273239612579346,"SELECT COUNT(*) FROM ""air_traffic"" LIMIT 10000",,1.0,2026-05-03T14:16:38.376590,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,2,What are the top 5 airlines by total passenger count in 2024?,aggregation,easy,False,True,False,Custom validation failed,1.3257222175598145,"SELECT ""Operating Airline"", SUM(""Passenger Count"") AS ""Total Passenger Count"" FROM ""air_traffic"" WHERE ""Year"" = 2024 GROUP BY ""Operating Airline"" ORDER BY ""Total Passenger Count"" DESC LIMIT 5",,5.0,2026-05-03T14:16:39.703887,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,3,"Show total passengers by terminal, excluding transit passengers",aggregation,easy,True,True,True,Query executed successfully,0.8553087711334229,"SELECT ""Terminal"", SUM(""Passenger Count"") FROM air_traffic WHERE ""Activity Type Code"" <> 'T' GROUP BY ""Terminal"" LIMIT 10000",,5.0,2026-05-03T14:16:40.559331,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,4,How many international passengers arrived at SFO in 2023?,filtering,easy,True,True,True,Query executed successfully,1.005859136581421,"SELECT COUNT(*) FROM air_traffic WHERE ""GEO Region"" = 'International' AND ""Terminal"" = 'SFO' AND ""Year"" = 2023 LIMIT 10000",,1.0,2026-05-03T14:16:41.565303,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,5,List all distinct operating airlines in the database,basic,easy,True,True,True,Query executed successfully,0.6618654727935791,"SELECT DISTINCT ""Operating Airline"" FROM air_traffic LIMIT 10000",,138.0,2026-05-03T14:16:42.227283,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,6,Compare domestic vs international passenger traffic for 2024,comparison,medium,False,True,False,Too few rows: 0 < 2,1.9080986976623535,"SELECT ""GEO Region"", SUM(""Passenger Count"") FROM air_traffic WHERE ""Year"" = 2024 AND ""GEO Region"" IN ('Domestic', 'International') GROUP BY ""GEO Region"" LIMIT 10000",,0.0,2026-05-03T14:16:44.135582,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,7,What are the top 3 low-fare carriers by passenger count in 2024?,aggregation,medium,False,True,False,Too few rows: 0 < 1,1.2495198249816895,"SELECT ""Operating Airline"" FROM ""air_traffic"" WHERE ""Price Category Code"" = 'L' AND ""Year"" = 2024 ORDER BY ""Passenger Count"" DESC LIMIT 3",,0.0,2026-05-03T14:16:45.385226,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,8,Show monthly passenger trends for United Airlines in 2024,time_series,medium,True,True,True,Query executed successfully,1.8779308795928955,"SELECT DATE_TRUNC('MONTH', ""Date"") AS ""month"", SUM(""Passenger Count"") AS ""total_passengers"" FROM ""air_traffic"" WHERE ""Operating Airline"" = 'United Airlines' AND EXTRACT(YEAR FROM ""Date"") = 2024 GROUP BY ""month"" ORDER BY ""month"" LIMIT 10000",,12.0,2026-05-03T14:16:47.263264,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,9,Which terminal had the highest passenger traffic in January 2024?,ranking,medium,True,True,True,Query executed successfully,1.652688980102539,"SELECT ""Terminal"" FROM ""air_traffic"" WHERE ""Year"" = 2024 AND ""Date"" >= '2024-01-01' AND ""Date"" < '2024-02-01' GROUP BY ""Terminal"" ORDER BY SUM(""Passenger Count"") DESC LIMIT 1",,1.0,2026-05-03T14:16:48.916056,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,10,What percentage of total passengers were on low-fare carriers in 2024?,percentage,medium,False,True,False,Custom validation failed,1.4836692810058594,"SELECT (CAST(SUM(CASE WHEN ""Price Category Code"" = 'L' THEN ""Passenger Count"" ELSE 0 END) AS DECIMAL) / SUM(""Passenger Count"")) * 100 FROM ""air_traffic"" WHERE ""Year"" = 2024 LIMIT 10000",,1.0,2026-05-03T14:16:50.399939,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,11,Show passenger count by boarding area for Terminal 1 in 2024,filtering,medium,True,True,True,Query executed successfully,1.9499497413635254,"SELECT ""Boarding Area"", SUM(""Passenger Count"") FROM ""air_traffic"" WHERE ""Terminal"" = 'Terminal 1' AND ""Year"" = 2024 GROUP BY ""Boarding Area"" LIMIT 10000",,2.0,2026-05-03T14:16:52.350090,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,12,Which GEO Region had the most international passengers in 2023?,ranking,medium,True,True,True,Query executed successfully,1.2780094146728516,"SELECT ""GEO Region"" FROM air_traffic WHERE ""Year"" = 2023 AND ""GEO Summary"" LIKE '%International%' GROUP BY ""GEO Region"" ORDER BY SUM(""Passenger Count"") DESC LIMIT 1",,1.0,2026-05-03T14:16:53.628665,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,13,Calculate year-over-year growth percentage for total passengers comparing 2023 to 2024,growth_analysis,hard,False,True,False,Custom validation failed,2.55442214012146,"SELECT ((SUM(CASE WHEN ""Year"" = 2024 THEN ""Passenger Count"" ELSE 0 END) - SUM(CASE WHEN ""Year"" = 2023 THEN ""Passenger Count"" ELSE 0 END)) / SUM(CASE WHEN ""Year"" = 2023 THEN ""Passenger Count"" ELSE 0 END)) * 100 FROM air_traffic WHERE ""Year"" IN (2023, 2024) LIMIT 10000",,1.0,2026-05-03T14:16:56.186898,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,14,Which 5 airlines had the highest year-over-year growth from 2023 to 2024?,growth_analysis,hard,True,True,True,Query executed successfully,3.2257163524627686,"SELECT ""Operating Airline"", (SUM(CASE WHEN ""Year"" = 2024 THEN ""Passenger Count"" ELSE 0 END) - SUM(CASE WHEN ""Year"" = 2023 THEN ""Passenger Count"" ELSE 0 END)) * 1.0 / NULLIF(SUM(CASE WHEN ""Year"" = 2023 THEN ""Passenger Count"" ELSE 0 END), 0) AS ""YoY Growth"" FROM air_traffic WHERE ""Year"" IN (2023, 2024) GROUP BY ""Operating Airline"" ORDER BY ""YoY Growth"" DESC LIMIT 5",,5.0,2026-05-03T14:16:59.412741,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,15,"Show quarterly passenger trends for 2024, broken down by domestic vs international",time_series,hard,False,True,False,Too few rows: 0 < 1,2.628451108932495,"SELECT DATE_TRUNC('QUARTER', ""Date"") AS ""Quarter"", CASE WHEN ""GEO Region"" = 'Domestic' THEN 'Domestic' ELSE 'International' END AS ""Region Type"", SUM(""Passenger Count"") AS ""Total Passenger Count"" FROM air_traffic WHERE EXTRACT(YEAR FROM ""Date"") = 2024 AND ""GEO Region"" IN ('Domestic', 'International') GROUP BY 1, 2 ORDER BY ""Quarter"", ""Region Type"" LIMIT 10000",,0.0,2026-05-03T14:17:02.041324,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,16,What is the market share percentage of each airline in 2024?,market_share,hard,True,True,True,Query executed successfully,1.8516366481781006,"SELECT ""Operating Airline"", (SUM(""Passenger Count"") * 100.0 / (SELECT SUM(""Passenger Count"") FROM ""air_traffic"" WHERE ""Year"" = 2024)) AS ""Market Share Percentage"" FROM ""air_traffic"" WHERE ""Year"" = 2024 GROUP BY ""Operating Airline"" LIMIT 10000",,57.0,2026-05-03T14:17:03.893071,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,17,Find airlines that operate in both terminals and have more than 100000 passengers in 2024,complex_filtering,hard,True,True,True,Query executed successfully,1.1527931690216064,"SELECT DISTINCT ""Operating Airline"" FROM ""air_traffic"" WHERE NOT ""Terminal"" IS NULL AND ""Passenger Count"" > 100000 AND ""Year"" = 2024 LIMIT 10000",,5.0,2026-05-03T14:17:05.045980,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,18,Show total enplaned passengers only (departures) for each month in 2024,edge_case,medium,False,True,False,Too few rows: 0 < 1,2.0902905464172363,"SELECT DATE_TRUNC('MONTH', ""Date"") AS ""month"", SUM(""Passenger Count"") AS ""total enplaned passengers"" FROM air_traffic WHERE EXTRACT(YEAR FROM ""Date"") = 2024 AND ""Activity Type Code"" = 'DEP' GROUP BY ""month"" ORDER BY ""month"" LIMIT 10000",,0.0,2026-05-03T14:17:07.136395,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,19,Compare passenger counts using Operating Airline vs Published Airline to identify codeshare impact,edge_case,hard,True,True,True,Query executed successfully,2.440995931625366,"SELECT ""Operating Airline"", ""Operating Airline IATA Code"", ""Published Airline"", ""Published Airline IATA Code"", SUM(""Passenger Count"") AS ""Operating Airline Total Passengers"", SUM(""Passenger Count"") AS ""Published Airline Total Passengers"" FROM air_traffic GROUP BY ""Operating Airline"", ""Operating Airline IATA Code"", ""Published Airline"", ""Published Airline IATA Code"" ORDER BY ""Operating Airline"", ""Published Airline"" LIMIT 10000",,146.0,2026-05-03T14:17:09.577538,,,,,,,
+query_generation,docker_model_runner,ai/gemma4:100k,20,"What is the average passenger count per flight by terminal in 2024, excluding transit passengers?",edge_case,hard,True,True,True,Query executed successfully,1.0772278308868408,"SELECT ""Terminal"", AVG(""Passenger Count"") FROM air_traffic WHERE ""Year"" = 2024 AND ""Activity Type Code"" <> 'T' GROUP BY ""Terminal"" LIMIT 10000",,4.0,2026-05-03T14:17:10.654900,,,,,,,
+debug_mechanism,docker_model_runner,ai/gemma4:100k,1,,,,True,,,,2.5905959606170654,,,,2026-05-03T14:17:18.070618,Missing quotes around column names with spaces,syntax_error_quotes,2.0,3.0,"SELECT Operating Airline, SUM(Passenger Count) as total
+        FROM air_traffic
+        WHERE Year = 2024
+        GROUP BY Operating Airline
+        ORDER BY total DESC
+        LIMIT 10",SELECT * FROM air_traffic LIMIT 10000,
+debug_mechanism,docker_model_runner,ai/gemma4:100k,2,,,,True,,,,1.3321397304534912,,,,2026-05-03T14:17:18.070642,Wrong table name (missing underscore),wrong_table_name,1.0,3.0,"SELECT ""Operating Airline"", SUM(""Passenger Count"") as total
+        FROM airtraffic
+        WHERE ""Year"" = 2024
+        GROUP BY ""Operating Airline""
+        LIMIT 10","SELECT ""Operating Airline"", SUM(""Passenger Count"") AS total FROM air_traffic WHERE ""Year"" = 2024 GROUP BY ""Operating Airline"" LIMIT 10",
+debug_mechanism,docker_model_runner,ai/gemma4:100k,3,,,,True,,,,1.3106019496917725,,,,2026-05-03T14:17:18.070653,Missing GROUP BY for aggregation,missing_group_by,1.0,3.0,"SELECT ""Terminal"", SUM(""Passenger Count"") as total
+        FROM air_traffic
+        WHERE ""Year"" = 2024
+        ORDER BY total DESC","SELECT ""Terminal"", SUM(""Passenger Count"") AS total FROM air_traffic WHERE ""Year"" = 2024 GROUP BY ""Terminal"" ORDER BY total DESC LIMIT 10000",
+debug_mechanism,docker_model_runner,ai/gemma4:100k,4,,,,True,,,,1.2886724472045898,,,,2026-05-03T14:17:18.070663,Wrong column name (misspelled),wrong_column_name,1.0,3.0,"SELECT ""Operating Airline"", SUM(""Passanger Count"") as total
+        FROM air_traffic
+        WHERE ""Year"" = 2024
+        GROUP BY ""Operating Airline""","SELECT ""Operating Airline"", SUM(""Passenger Count"") AS total FROM air_traffic WHERE ""Year"" = 2024 GROUP BY ""Operating Airline"" LIMIT 10000",
+debug_mechanism,docker_model_runner,ai/gemma4:100k,5,,,,True,,,,0.8915233612060547,,,,2026-05-03T14:17:18.070672,Invalid date comparison syntax,date_format_error,1.0,3.0,"SELECT SUM(""Passenger Count"") as total
+        FROM air_traffic
+        WHERE ""Date"" = '2024-01'",SELECT * FROM air_traffic LIMIT 10000,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,1,How many total rows are in the air_traffic table?,basic,easy,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.00452423095703125,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.209729,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,2,What are the top 5 airlines by total passenger count in 2024?,aggregation,easy,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0023512840270996094,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.212136,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,3,"Show total passengers by terminal, excluding transit passengers",aggregation,easy,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.002008199691772461,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.214186,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,4,How many international passengers arrived at SFO in 2023?,filtering,easy,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0018086433410644531,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.216048,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,5,List all distinct operating airlines in the database,basic,easy,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.002282381057739258,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.218384,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,6,Compare domestic vs international passenger traffic for 2024,comparison,medium,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0024156570434570312,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.220856,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,7,What are the top 3 low-fare carriers by passenger count in 2024?,aggregation,medium,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0024704933166503906,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.223385,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,8,Show monthly passenger trends for United Airlines in 2024,time_series,medium,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0024292469024658203,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.225866,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,9,Which terminal had the highest passenger traffic in January 2024?,ranking,medium,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.002304553985595703,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.228221,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,10,What percentage of total passengers were on low-fare carriers in 2024?,percentage,medium,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.002312898635864258,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.230604,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,11,Show passenger count by boarding area for Terminal 1 in 2024,filtering,medium,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.002154111862182617,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.232833,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,12,Which GEO Region had the most international passengers in 2023?,ranking,medium,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.002309083938598633,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.235195,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,13,Calculate year-over-year growth percentage for total passengers comparing 2023 to 2024,growth_analysis,hard,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.002162933349609375,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.237426,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,14,Which 5 airlines had the highest year-over-year growth from 2023 to 2024?,growth_analysis,hard,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.002332925796508789,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.239808,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,15,"Show quarterly passenger trends for 2024, broken down by domestic vs international",time_series,hard,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.002288818359375,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.242147,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,16,What is the market share percentage of each airline in 2024?,market_share,hard,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.002221345901489258,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.244423,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,17,Find airlines that operate in both terminals and have more than 100000 passengers in 2024,complex_filtering,hard,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.00252532958984375,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.247000,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,18,Show total enplaned passengers only (departures) for each month in 2024,edge_case,medium,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0022411346435546875,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.249287,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,19,Compare passenger counts using Operating Airline vs Published Airline to identify codeshare impact,edge_case,hard,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0023162364959716797,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.251651,,,,,,,
+query_generation,docker_model_runner,ai/qwen3._9b:128k,20,"What is the average passenger count per flight by terminal in 2024, excluding transit passengers?",edge_case,hard,False,False,False,"Exception: error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0023534297943115234,,"error while getting model: get model '""ai/qwen3._9b:128k""': model not found",0.0,2026-05-03T14:17:18.254055,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,1,How many total rows are in the air_traffic table?,basic,easy,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",33.71897506713867,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:17:52.130104,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,2,What are the top 5 airlines by total passenger count in 2024?,aggregation,easy,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.8685975074768066,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:17:54.020752,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,3,"Show total passengers by terminal, excluding transit passengers",aggregation,easy,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.7181158065795898,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:17:55.740835,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,4,How many international passengers arrived at SFO in 2023?,filtering,easy,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.538254737854004,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:17:57.281653,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,5,List all distinct operating airlines in the database,basic,easy,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.491600513458252,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:17:58.773985,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,6,Compare domestic vs international passenger traffic for 2024,comparison,medium,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.422685146331787,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:18:00.198261,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,7,What are the top 3 low-fare carriers by passenger count in 2024?,aggregation,medium,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.5397307872772217,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:18:01.747557,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,8,Show monthly passenger trends for United Airlines in 2024,time_series,medium,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.3574025630950928,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:18:03.105613,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,9,Which terminal had the highest passenger traffic in January 2024?,ranking,medium,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.4106965065002441,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:18:04.516655,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,10,What percentage of total passengers were on low-fare carriers in 2024?,percentage,medium,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.4079880714416504,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:18:05.925012,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,11,Show passenger count by boarding area for Terminal 1 in 2024,filtering,medium,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.5263161659240723,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:18:07.453155,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,12,Which GEO Region had the most international passengers in 2023?,ranking,medium,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.429335117340088,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:18:08.883044,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,13,Calculate year-over-year growth percentage for total passengers comparing 2023 to 2024,growth_analysis,hard,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.312300443649292,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:18:10.196544,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,14,Which 5 airlines had the highest year-over-year growth from 2023 to 2024?,growth_analysis,hard,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.3461453914642334,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:18:11.543546,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,15,"Show quarterly passenger trends for 2024, broken down by domestic vs international",time_series,hard,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.316112995147705,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:18:12.860031,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,16,What is the market share percentage of each airline in 2024?,market_share,hard,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.5953996181488037,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:18:14.455995,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,17,Find airlines that operate in both terminals and have more than 100000 passengers in 2024,complex_filtering,hard,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.3244636058807373,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:18:15.780961,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,18,Show total enplaned passengers only (departures) for each month in 2024,edge_case,medium,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.3838529586791992,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:18:17.165193,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,19,Compare passenger counts using Operating Airline vs Published Airline to identify codeshare impact,edge_case,hard,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.2972941398620605,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:18:18.462686,,,,,,,
+query_generation,docker_model_runner,ai/qwen3.6_27b:128k,20,"What is the average passenger count per flight by terminal in 2024, excluding transit passengers?",edge_case,hard,False,False,False,"Exception: Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",1.4212310314178467,,"Error code: 500 - {'error': {'code': 500, 'message': 'Compute error.', 'type': 'server_error'}}",0.0,2026-05-03T14:18:19.884963,,,,,,,
